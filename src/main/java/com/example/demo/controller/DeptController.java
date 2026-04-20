@@ -18,6 +18,7 @@ public class DeptController {
     @GetMapping
     public Result<List<Dept>> list() {
         List<Dept> deptList = deptService.list();
+        //大撒大撒
         return Result.success(deptList);
     }
 
