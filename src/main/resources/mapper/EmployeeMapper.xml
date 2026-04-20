@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.EmployeeMapper">
+    <!-- 公共查询字段 -->
+    <sql id="Base_Column_List">
+        id, username, password, name, gender, phone, position, dept_id, image, entry_date, salary, create_time, update_time
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="page" resultType="com.example.demo.entity.Employee">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM emp
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="gender != null">
+                AND gender = #{gender}
+            </if>
+            <if test="begin != null">
+                AND entry_date >= #{begin}
+            </if>
+            <if test="end != null">
+                AND entry_date &lt;= #{end}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="getById" resultType="com.example.demo.entity.Employee">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM emp
+        WHERE id = #{id}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO emp
+        (username, password, name, gender, phone, position, dept_id, image, entry_date, salary, create_time, update_time)
+        VALUES
+        (#{username}, #{password}, #{name}, #{gender}, #{phone}, #{position}, #{deptId}, #{image}, #{entryDate}, #{salary}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update">
+        UPDATE emp
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            update_time = #{updateTime}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteByIds">
+        DELETE FROM emp WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询所有 -->
+    <select id="list" resultType="com.example.demo.entity.Employee">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM emp
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据用户名查询 -->
+    <select id="getByUsername" resultType="com.example.demo.entity.Employee">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM emp
+        WHERE username = #{username}
+    </select>
+
+    <!-- 根据手机号查询 -->
+    <select id="getByPhone" resultType="com.example.demo.entity.Employee">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM emp
+        WHERE phone = #{phone}
+    </select>
+</mapper> 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.EmployeeExperienceMapper">
+    <!-- 公共查询字段 -->
+    <sql id="Base_Column_List">
+        id, emp_id, start_date, end_date, company, position
+    </sql>
+
+    <!-- 根据员工ID查询 -->
+    <select id="getByEmpId" resultType="com.example.demo.entity.EmployeeExperience">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM emp_expr
+        WHERE emp_id = #{empId}
+        ORDER BY start_date DESC
+    </select>
+
+    <!-- 批量新增 -->
+    <insert id="insertBatch">
+        INSERT INTO emp_expr
+        (emp_id, start_date, end_date, company, position)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.empId}, #{item.startDate}, #{item.endDate}, #{item.company}, #{item.position})
+        </foreach>
+    </insert>
+
+    <!-- 根据员工ID删除 -->
+    <delete id="deleteByEmpId">
+        DELETE FROM emp_expr WHERE emp_id = #{empId}
+    </delete>
+</mapper> 
